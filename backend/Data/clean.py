@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
+import re
 
 conn= 'postgresql://postgres:0000@localhost:5432/aepvvo'
 engine=create_engine(conn)
@@ -21,6 +22,15 @@ def cleanData(df) :
     #check dupp
     # dupp = df[df['ID'].duplicated() == True]
     
+    ## double model
+    def remove_georgian_chars(text):
+        text = re.sub("[\u10D0-\u10FF]+", "", text)
+        text = re.sub(r"\b(\w+\b)(?:.*\b\1\b)+", r"\1", text)
+        return text.strip()
+
+    # appliquer la fonction remove_georgian_chars à la colonne "model" en utilisant la méthode apply()
+    df["Model"] = df["Model"].apply(remove_georgian_chars)
+        
     df.drop_duplicates(subset=['ID'], keep='first',inplace=True)
     
     # df = df.drop_duplicates(subset=['ID'], keep='first')
@@ -83,7 +93,7 @@ def modelDf(df):
     df = df.iloc[:, [3,4]]
     df = df.drop_duplicates(subset=['Model'], keep='first')
     df.rename(columns={'Manufacturer': 'manufacturer_libele',"Model":"model_libele"},inplace = True)
-    ##PRIUS 2014
+    df.to_csv('listeModelv2.csv')
     return df
 
 modelTable=modelDf(cleanDf)
@@ -148,23 +158,23 @@ carTable=carDf(cleanDf)
 
 #### import vers BDD
 
-manufacturerTable.to_sql('manufacturer',engine, if_exists='append',index= False)
+# manufacturerTable.to_sql('manufacturer',engine, if_exists='append',index= False)
 
-modelTable.to_sql('model',engine, if_exists='append',index= False)
+# modelTable.to_sql('model',engine, if_exists='append',index= False)
 
-doorTable.to_sql('door',engine, if_exists='append',index= False)
+# doorTable.to_sql('door',engine, if_exists='append',index= False)
 
-gearboxTable.to_sql('gearbox',engine, if_exists='append',index= False)
+# gearboxTable.to_sql('gearbox',engine, if_exists='append',index= False)
 
-drivewheelsTable.to_sql('drivewheels',engine, if_exists='append',index= False)
+# drivewheelsTable.to_sql('drivewheels',engine, if_exists='append',index= False)
 
-fuelTable.to_sql('fuel',engine, if_exists='append',index= False)
+# fuelTable.to_sql('fuel',engine, if_exists='append',index= False)
 
-cylindersTable.to_sql('cylinders',engine, if_exists='append',index= False)
+# cylindersTable.to_sql('cylinders',engine, if_exists='append',index= False)
 
-categoryTable.to_sql('category',engine, if_exists='append',index= False)
+# categoryTable.to_sql('category',engine, if_exists='append',index= False)
 
-carTable.to_sql('car',engine, if_exists='append',index= False)
+# carTable.to_sql('car',engine, if_exists='append',index= False)
 
 
 
