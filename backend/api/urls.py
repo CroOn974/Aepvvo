@@ -18,7 +18,7 @@ fuels = DefaultRouter()
 fuels.register(r'fuels/', FuelViewSet, basename='fuels')
 
 drivewheels = DefaultRouter()
-drivewheels.register(r'drivewheels/', Drivewheels, basename='drivewheels')
+drivewheels.register(r'drivewheels/', DrivewheelsViewSet, basename='drivewheels')
 
 gearbox = DefaultRouter()
 gearbox.register(r'gearbox/', GearboxViewSet, basename='gearbox')

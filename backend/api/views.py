@@ -1,4 +1,4 @@
-from api.models import Category, Cylinders, Door ,Drivewheels, Fuel, Gearbox, Manufacturer, Model
+from .models import *
 
 # API
 from rest_framework import generics
