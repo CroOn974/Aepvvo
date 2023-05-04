@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from api.views import CategoryViewSet, CylindersViewSet, DoorViewSet, Drivewheels, FuelViewSet, GearboxViewSet, ManufacturerViewSet, ModelViewSet
+from .views import *
 
 manufacturer = DefaultRouter()
 manufacturer.register(r'manufacturer/', ManufacturerViewSet, basename='manufacturer')

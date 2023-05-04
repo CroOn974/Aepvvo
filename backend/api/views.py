@@ -5,7 +5,7 @@ from rest_framework import generics
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from api.serializer import CategorySerializer, CylindersSerializer, DoorSerializer, DrivewheelsSerializer, FuelsSerializer, GearboxSerializer, ManufacturerSerializer, ModelSerializer
+from .serializer import *
 
 
 ##

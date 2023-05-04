@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Category, Cylinders, Door, Drivewheels , Fuel, Gearbox, Manufacturer, Model 
+from .models import *
 
 class ManufacturerSerializer(serializers.ModelSerializer):
     class Meta:
