@@ -160,33 +160,17 @@ carTable=carDf(cleanDf)
 
 #### import vers BDD
 
-# manufacturerTable.to_sql('manufacturer',engine, if_exists='append',index= False)
+tables = {
+    'manufacturer': manufacturerTable,
+    'model': modelTable,
+    'door': doorTable,
+    'gearbox': gearboxTable,
+    'drivewheels': drivewheelsTable,
+    'fuel': fuelTable,
+    'cylinders': cylindersTable,
+    'category': categoryTable,
+    'car': carTable
+}
 
-# modelTable.to_sql('model',engine, if_exists='append',index= False)
-
-# doorTable.to_sql('door',engine, if_exists='append',index= False)
-
-# gearboxTable.to_sql('gearbox',engine, if_exists='append',index= False)
-
-# drivewheelsTable.to_sql('drivewheels',engine, if_exists='append',index= False)
-
-# fuelTable.to_sql('fuel',engine, if_exists='append',index= False)
-
-# cylindersTable.to_sql('cylinders',engine, if_exists='append',index= False)
-
-# categoryTable.to_sql('category',engine, if_exists='append',index= False)
-
-# carTable.to_sql('car',engine, if_exists='append',index= False)
-
-
-
-
-
-
-
-
-
-
-
-
-
+for table_name, table_data in tables.items():
+    table_data.to_sql(table_name, engine, if_exists='append', index=False)
