@@ -22,6 +22,9 @@ def cleanData(df) :
     #check dupp
     # dupp = df[df['ID'].duplicated() == True]
     
+    ###uppercase nom model  ex:Cayenne S et s
+    df['Model'] = df['Model'].str.upper()
+    
     ## double model
     def remove_georgian_chars(text):
         text = re.sub("[\u10D0-\u10FF]+", "", text)
@@ -41,8 +44,7 @@ def cleanData(df) :
     ####transforme leather interior en bool
     df['Leather interior'].replace({'Yes': True, 'No':False}, inplace=True)
     
-    ###uppercase nom model  ex:Cayenne S et s
-    df['Model'] = df['Model'].str.upper()
+
     ####lowercase turbo
     df['Engine volume'] = df['Engine volume'].str.lower()
     ####lignes avec turbo
@@ -70,7 +72,7 @@ def cleanData(df) :
 
     #### remplis les null par median
     df['Levy'] = df['Levy'].fillna(df['Levy'].median())
-
+    
     df.to_csv('cleanData.csv',index=False)
 
     # print(df.nlargest(10, 'Price'))
