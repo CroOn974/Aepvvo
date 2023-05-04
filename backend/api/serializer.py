@@ -3,7 +3,7 @@ from api.models import Category, Cylinders, Door, Drivewheels , Fuel, Gearbox, M
 
 class ManufacturerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Manufacturer
         fields = '__all__'
 
 class ModelSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class ModelSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Manufacturer
+        model = Category
         fields = '__all__'
 
 class CylindersSerializer(serializers.ModelSerializer):
