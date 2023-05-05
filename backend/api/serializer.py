@@ -42,3 +42,20 @@ class DoorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Door
         fields = '__all__'
+
+class PredictSerializer(serializers.ModelSerializer):
+    manufacturer  = serializers.CharField()
+    model  = serializers.CharField()
+    year = serializers.IntegerField()
+    category  = serializers.CharField()
+    fuelType  = serializers.CharField()
+    mileage = serializers.IntegerField()
+    gearBoxList  = serializers.CharField()
+    engine  = serializers.CharField()
+    leather  = serializers.CharField()
+    airbag  = serializers.CharField()
+    levy  = serializers.CharField()
+    cylinders  = serializers.CharField()
+
+    class Meta:
+        fields = ['manufacturer','model','year','category','fuelType','mileage','gearBoxList','engine','leather','airbag','levy','cylinders']
