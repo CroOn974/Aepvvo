@@ -56,6 +56,8 @@ def cleanData(df) :
     ####supp km puis conversion en int
     df['Mileage'] = df['Mileage'].str.strip('km')
     df['Mileage'] = df['Mileage'].astype('int64')
+    ### drop 0km
+    df =df[df['Mileage'] !=0].copy()
 
     #### nettoyage portes
     df['Doors'].replace({'04-May':'4-5', '02-Mar':'2-3', '>5':'4-5'}, inplace=True)
@@ -158,7 +160,7 @@ def carDf(df):
 carTable=carDf(cleanDf)
     
 
-#### import vers BDD
+### import vers BDD
 
 tables = {
     'manufacturer': manufacturerTable,
@@ -174,3 +176,5 @@ tables = {
 
 for table_name, table_data in tables.items():
     table_data.to_sql(table_name, engine, if_exists='append', index=False)
+    
+    
