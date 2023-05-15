@@ -1,5 +1,6 @@
 from api.models import Category, Cylinders, Door ,Drivewheels, Fuel, Gearbox, Manufacturer, Model
 import pandas as pd
+import sklearn
 import pickle
 import joblib
 # API
@@ -14,6 +15,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 import os
 from django.conf import settings
+
 
 ##
 # Récupère toutes les marques de voiture
@@ -113,6 +115,7 @@ class PredictViewSet(viewsets.ViewSet):
         # Récupérer les données validées
         df = pd.DataFrame(request.data, index=[0])
 
+        # Renommer les colonnes pour correspondre aux noms du modèle entraîné
         df.rename(columns={"manufacturer": "Manufacturer", 
                            "model": "Model",
                            "year": "Prod. year",
@@ -129,34 +132,16 @@ class PredictViewSet(viewsets.ViewSet):
                            "turbo": "Turbo",
                            },inplace = True)
         
-                
-        file = 'api\model_predict\model.pkl'
-        # Charger le modèle à partir du fichier
-        with open(file, 'rb') as f:
-            model = pickle.load(f)
 
-        model_path = os.path.join(settings.BASE_DIR, 'api', 'model_predict')
-        ct = joblib.load(model_path+'/full_pipeline.pkl')
-        # file2 = 'api\model_predict\full_pipeline.pkl'
+        # Charger le modèle entraîné
+        model = joblib.load('api\model_predict\modele_regression_linaire.pkl')
 
-        # with open(file2, 'rb') as f:
-        #     ct = joblib.load(file2)
+        # Effectuer la prédiction
+        predicted_prices = model.predict(df)
+
+        # Renvoyer la prédiction
+        response_data = {'predicted_prices': predicted_prices.tolist()}
+
+        return Response(response_data)
 
 
-        # Encoder les variables catégorielles
-        encoder = OneHotEncoder()
-        categorical_columns = ['Manufacturer', 'Category', 'Gear box type', 'Fuel type','Drive wheels','Model']
-        encoded_test_data = ct.transform(df[categorical_columns])
-        encoded_test_df = pd.DataFrame(encoded_test_data.toarray(), columns=encoder.get_feature_names(categorical_columns))
-
-        # Concaténer les données encodées avec les autres variables
-        test_data_encoded = pd.concat([df.drop(categorical_columns, axis=1), encoded_test_df], axis=1)
-
-        # Faire une prédiction sur les nouvelles données
-        y_pred = model.predict(test_data_encoded)
-
-        # Afficher les prédictions
-        print(y_pred)
-                # Retourner la réponse
-        return Response({'predicted_value': y_pred}, status=status.HTTP_200_OK)
-    
