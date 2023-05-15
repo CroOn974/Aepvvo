@@ -1,5 +1,6 @@
 <template>
   <v-sheet width="500" class="mx-auto ma-10">
+    <v-alert v-if="price" closable>{{ `Votre voiture est estimée à ${predicPrice} euro` }}</v-alert>
     <v-form @submit.prevent="submitForm">
       <v-row>
         <v-col cols="6">
@@ -39,6 +40,8 @@ export default {
       gearBoxList: [],
       driveWheelsList: [],
       cylindersList:[],
+      price: false,
+      predicPrice:null,
       car :{
         manufacturer: null,
         model: null,
@@ -72,11 +75,16 @@ export default {
     }
   },
   methods: {
+    /**
+     * 
+     */
     submitForm() {
-      const data = this.car
-      console.log(data);
       this.getPredic()
     },
+    /**
+     * Récupère les manufacturer
+     * 
+     */
     async getManufacturer(){
 
       var response = await fetch(this.host+'/api/manufacturer/');
@@ -92,6 +100,10 @@ export default {
       
 
     },
+    /**
+     * Récupère les modèles de voiture selon le manufactuer selectionné
+     * 
+     */
     async getModel(){
       
       if(this.car.manufacturer) {
@@ -109,6 +121,10 @@ export default {
       }
 
     },
+    /**
+     *  Récupère les category
+     * 
+     */
     async getCategory(){
 
       var response = await fetch(this.host+'/api/category/');
@@ -123,6 +139,10 @@ export default {
       this.categoryList = category;
 
     },
+    /**
+     * Récupère les different FuelType
+     * 
+     */
     async getFuelType(){
 
       var response = await fetch(this.host+'/api/fuels/');
@@ -137,6 +157,10 @@ export default {
       this.fuelList = fuel;
 
     },
+    /**
+     * Récupère les different GearBox
+     * 
+     */
     async getGearBox(){
       var response = await fetch(this.host+'/api/gearbox/');
       const data = await response.json();
@@ -149,6 +173,10 @@ export default {
 
       this.gearBoxList = gearBox;
     },
+    /**
+     * Récupère les different DriveWheels
+     * 
+     */
     async getDriveWheels(){
       var response = await fetch(this.host+'/api/drivewheels/');
       const data = await response.json();
@@ -162,6 +190,10 @@ export default {
       this.driveWheelsList = driveWheels;
 
     },
+    /**
+     * Récupère les different Cylinders
+     * 
+     */
     async getCylinders(){
       var response = await fetch(this.host+'/api/cylinders/');
       const data = await response.json();
@@ -174,6 +206,10 @@ export default {
 
       this.cylindersList = cylinders;
     },
+    /**
+     * Envoie a l'api les information sur la voiture et récupère la prediction
+     * 
+     */
     async getPredic(){
       var response = await fetch(this.host+'/api/predict/',{
           method:'post',
@@ -183,7 +219,18 @@ export default {
           body: JSON.stringify(this.car)   
       });
 
-      console.log(response);
+      if (response.ok) {
+        var data = await response.json();
+        var predictedPrices = data.predicted_prices;
+        var prediction = predictedPrices[0];
+
+        this.price = true
+
+        this.predicPrice = parseInt(prediction)
+        
+      } else {
+          console.log('Erreur lors de la requête');
+      }
     }
   }
 };
